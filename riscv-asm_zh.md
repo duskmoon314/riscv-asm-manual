@@ -190,7 +190,7 @@ RISC-V-specific 和 GNU .-prefixed 选项。
 %tls_gd_pcrel_hi(symbol) * | TLS GD "Global Dynamic" (HI20) | auipc
 %got_pcrel_hi(symbol) * | GOT PC-relative (HI20) | auipc
 
-* 这些重用 %pcrel_lo(label) 的低半部分
+这些重用 %pcrel_lo(label) 的低半部分
 
 ## 标签
 
@@ -359,7 +359,7 @@ loop:
 	fsd	fa0, var4, t0
 ```
 
-如`objdump`所示，它生成以下汇编器输出和重定位：
+如`objdump`所见，它生成以下汇编器输出和重定位：
 
 ```
 0000000000000000 <.text>:
@@ -517,7 +517,7 @@ fail_msg:
 伪指令 | 基本指令 | 意义 | 注释
 :-- | :-- | :-- | :--
 la rd, symbol | auipc rd, symbol[31:12]; addi rd, rd, symbol[11:0] | Load address | With `.option nopic` (Default)
-la rd, symbol | auipc rd, symbol@GOT[31:12]; l{w|d} rd, symbol@GOT[11:0](rd) | Load address | With `.option pic`
+la rd, symbol | auipc rd, symbol@GOT[31:12]; l{w | Load address | With `.option pic`
 lla rd, symbol | auipc rd, symbol[31:12]; addi rd, rd, symbol[11:0] | Load local address |
 lga rd, symbol | auipc rd, symbol@GOT[31:12]; l{w|d} rd, symbol@GOT[11:0](rd) | Load global address |
 l{b|h|w|d} rd, symbol | auipc rd, symbol[31:12]; l{b|h|w|d} rd, symbol[11:0](rd) | Load global |
