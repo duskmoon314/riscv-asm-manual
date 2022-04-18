@@ -2,11 +2,11 @@
 
 # 版权和许可信息
 
-The RISC-V Assembly Programmer's Manual is
+RISC-V 汇编程序员手册
 
 © 2017 Palmer Dabbelt [palmer@dabbelt.com](mailto:palmer@dabbelt.com) © 2017 Michael Clark [michaeljclark@mac.com](mailto:michaeljclark@mac.com) © 2017 Alex Bradbury [asb@lowrisc.org](mailto:asb@lowrisc.org)
 
-It is licensed under the Creative Commons Attribution 4.0 International License (CC-BY 4.0). The full license text is available at https://creativecommons.org/licenses/by/4.0/.
+根据知识共享署名 4.0 国际许可 (CC-BY 4.0) 许可。完整的许可文本可在 https://creativecommons.org/licenses/by/4.0/ 获得。
 
 # 命令行参数
 
@@ -14,53 +14,53 @@ It is licensed under the Creative Commons Attribution 4.0 International License 
 
 # 寄存器
 
-Registers are the most important part of any processor. RISC-V defines various types, depending on which extensions are included: The general registers (with the program counter), control registers, floating point registers (F extension), and vector registers (V extension).
+寄存器是任何处理器中最重要的部分。 RISC-V 定义了多种类型，具体取决于包含哪些扩展：通用寄存器（与程序计数器）、控制寄存器、浮点寄存器（F 扩展）和向量寄存器（V 扩展）。
 
 ## 通用寄存器
 
-The RV32I base integer ISA includes 32 registers, named `x0` to `x31`. The program counter `PC` is separate from these registers, in contrast to other processors such as the ARM-32. The first register, `x0`, has a special function: Reading it always returns 0 and writes to it are ignored. As we will see later, this allows various tricks and simplifications.
+RV32I 基本整数 ISA 包括 32 个寄存器，命名为`x0`到`x31` 。与 ARM-32 等其他处理器不同，程序计数器`PC`与这些寄存器是分开的。第一个寄存器`x0`有一个特殊的功能：读取它总是返回 0 并且写入它被忽略。正如我们稍后将看到的，这允许各种技巧和简化。
 
-In practice, the programmer doesn't use this notation for the registers. Though `x1` to `x31` are all equally general-use registers as far as the processor is concerned, by convention certain registers are used for special tasks. In assembler, they are given standardized names as part of the RISC-V **application binary interface** (ABI). This is what you will usually see in code listings. If you really want to see the numeric register names, the `-M` argument to objdump will provide them.
+实际使用中，程序员不会使用这种表示法描述寄存器。虽然`x1`到`x31`就处理器而言都是同等的通用寄存器，但按照惯例，某些寄存器用于特殊任务。在汇编程序中，它们被赋予标准化名称作为 RISC-V**应用程序二进制接口**(ABI) 的一部分。这是您通常会在代码中看到的内容。如果您真的想查看数字式的寄存器名称，objdump 的`-M`参数将提供它们。
 
-登记 | ABI | 按惯例使用 | Preserved?
+登记 | ABI | 按惯例使用 | 保留值？
 :-- | :-- | :-- | ---
-x0 | zero | hardwired to 0, ignores writes | *n/a*
-x1 | ra | 跳转的返回地址 | no
-x2 | sp | stack pointer | yes
+x0 | zero | 硬件横零，忽略写入 | *n/a*
+x1 | ra | 跳转的返回地址 | 否
+x2 | sp | 栈指针 | 是
 x3 | gp | 全局指针 | *n/a*
 x4 | tp | 线程指针 | *n/a*
-x5 | t0 | 临时寄存器 0 | no
-x6 | t1 | 临时寄存器 1 | no
-x7 | t2 | 临时寄存器 2 | no
-x8 | s0*或*fp | saved register 0 *or* frame pointer | yes
-x9 | s1 | saved register 1 | yes
-x10 | a0 | 返回值*或*函数参数 0 | no
-x11 | a1 | 返回值*或*函数参数 1 | no
-x12 | a2 | 函数参数 2 | no
-x13 | a3 | 函数参数 3 | no
-x14 | a4 | 函数参数 4 | no
-x15 | a5 | 函数参数 5 | no
-x16 | a6 | 函数参数 6 | no
-x17 | a7 | 函数参数 7 | no
-x18 | s2 | saved register 2 | yes
-x19 | s3 | saved register 3 | yes
-x20 | s4 | saved register 4 | yes
-x21 | s5 | saved register 5 | yes
-x22 | s6 | saved register 6 | yes
-x23 | s7 | saved register 7 | yes
-x24 | s8 | saved register 8 | yes
-x25 | s9 | saved register 9 | yes
-x26 | s10 | saved register 10 | yes
-x27 | s11 | saved register 11 | yes
-x28 | t3 | 临时寄存器 3 | no
-x29 | t4 | 临时寄存器 4 | no
-x30 | t5 | 临时寄存器 5 | no
-x31 | t6 | 临时寄存器 6 | no
-pc | *(none)* | 程序计数器 | *n/a*
+x5 | t0 | 临时寄存器 0 | 否
+x6 | t1 | 临时寄存器 1 | 否
+x7 | t2 | 临时寄存器 2 | 否
+x8 | s0*或*fp | 保存用寄存器 0*或*帧指针 | 是
+x9 | s1 | 保存用寄存器 1 | 是
+x10 | a0 | 返回值*或*函数参数 0 | 否
+x11 | a1 | 返回值*或*函数参数 1 | 否
+x12 | a2 | 函数参数 2 | 否
+x13 | a3 | 函数参数 3 | 否
+x14 | a4 | 函数参数 4 | 否
+x15 | a5 | 函数参数 5 | 否
+x16 | a6 | 函数参数 6 | 否
+x17 | a7 | 函数参数 7 | 否
+x18 | s2 | 保存用寄存器 2 | 是
+x19 | s3 | 保存用寄存器 3 | 是
+x20 | s4 | 保存用寄存器 4 | 是
+x21 | s5 | 保存用寄存器 5 | 是
+x22 | s6 | 保存用寄存器 6 | 是
+x23 | s7 | 保存用寄存器 7 | 是
+x24 | s8 | 保存用寄存器 8 | 是
+x25 | s9 | 保存用寄存器 9 | 是
+x26 | s10 | 保存用寄存器 10 | 是
+x27 | s11 | 保存用寄存器 11 | 是
+x28 | t3 | 临时寄存器 3 | 否
+x29 | t4 | 临时寄存器 4 | 否
+x30 | t5 | 临时寄存器 5 | 否
+x31 | t6 | 临时寄存器 6 | 否
+pc | *无* | 程序计数器 | *n/a*
 
 *RV32I 的寄存器。基于 RISC-V 文档以及 Patterson 和 Waterman “The RISC-V Reader” (2017)*
 
-As a general rule, the **saved registers** `s0` to `s11` are preserved across function calls, while the **argument registers** `a0` to `a7` and the **temporary registers** `t0` to `t6` are not.  The use of the various specialized registers such as `sp` by convention will be discussed later in more detail.
+作为一般规则，**保存用寄存器**`s0`到`s11`在函数调用中保留，而**参数寄存器**`a0`到`a7`和**临时寄存器**`t0`到`t6`则不保留。稍后将更详细地讨论各种专用寄存器的使用，例如按照惯例使用`sp` 。
 
 ## 控制寄存器
 
@@ -80,15 +80,15 @@ As a general rule, the **saved registers** `s0` to `s11` are preserved across fu
 
 # 指令系统
 
-Official Specifications webpage:
+官方规范页面：
 
 - https://riscv.org/specifications/
 
-Latest Specifications draft repository:
+最新规范草案仓库：
 
 - https://github.com/riscv/riscv-isa-manual
 
-## Instructions
+## 指令
 
 # RISC-V ISA 规范
 
@@ -96,21 +96,21 @@ https://riscv.org/specifications/
 
 ## 指令别名
 
-ALIAS line from opcodes/riscv-opc.c
+来自 opcodes/riscv-opc.c 的别名
 
 为了更好地诊断程序流到达意外位置的情况，您可能希望在那里发出一条已知会陷入陷阱的指令。您可以使用`UNIMP`伪指令，它应该会在几乎所有系统中捕获。该指令的*事实上的*标准实现是：
 
-- `C.UNIMP`: `0000`. The all-zeroes pattern is not a valid instruction. Any system which traps on invalid instructions will thus trap on this `UNIMP` instruction form. Despite not being a valid instruction, it still fits the 16-bit (compressed) instruction format, and so `0000 0000` is interpreted as being two 16-bit `UNIMP` instructions.
+- `C.UNIMP` ： `0000` 。全零不是有效指令。任何陷入无效指令的系统都会因此陷入这种`UNIMP`指令形式。尽管不是有效指令，但它仍然符合 16 位（压缩）指令格式，因此`0000 0000`被解释为两条 16 位`UNIMP`指令。
 
-- `UNIMP` : `C0001073`. This is an alias for `CSRRW x0, cycle, x0`. Since `cycle` is a read-only CSR, then (whether this CSR exists or not) an attempt to write into it will generate an illegal instruction exception. This 32-bit form of `UNIMP` is emitted when targeting a system without the C extension, or when the `.option norvc` directive is used.
+- `UNIMP` ： `C0001073` 。这是`CSRRW x0, cycle, x0`的别名。因为`cycle`是一个只读的CSR，那么（无论这个CSR是否存在）尝试写入它都会产生一个非法指令异常。当针对没有 C 扩展的系统或使用`.option norvc`指令时，会生成这种 32 位形式的`UNIMP` 。
 
 ## 伪操作
 
 RISC-V-specific 和 GNU .-prefixed 选项。
 
-The following table lists assembler directives:
+下表列出了汇编器指示：
 
-指示 | Arguments | 描述
+指示 | 参数 | 描述
 :-- | :-- | :--
 .align | integer | align to power of 2 (alias for .p2align)
 .file | "filename" | emit filename FILE LOCAL symbol table
@@ -165,13 +165,13 @@ The following table lists assembler directives:
 
 为以下代码区域启用/禁用链接器松弛。
 
-NOTE: Code region follows by `.option relax` will emit `R_RISCV_RELAX`/`R_RISCV_ALIGN` even linker unsupport relaxation, suggested usage is using `.option norelax` with `.option push`/`.option pop` if you want to disable linker relaxation on specific code region.
+注意： `.option relax`的代码区域将生成`R_RISCV_RELAX` / `R_RISCV_ALIGN`即使链接器不支持放松。如果要禁用特定代码区域的链接器松弛，建议使用`.option norelax`和`.option push` / `.option pop` 。
 
 注意：禁用特定代码区域的链接器松弛的推荐方法是使用`.option push` 、 `.option norelax`和`.option pop` ，如果用户已经禁用了链接器松弛，这可以防止意外启用的链接器松弛。
 
 #### `push` / `pop`
 
-Push/pop current options to/from the options stack.
+将当前选项推入/弹出选项栈。
 
 ## 汇编器重定位函数
 
@@ -190,7 +190,7 @@ Push/pop current options to/from the options stack.
 %tls_gd_pcrel_hi(symbol) * | TLS GD "Global Dynamic" (HI20) | auipc
 %got_pcrel_hi(symbol) * | GOT PC-relative (HI20) | auipc
 
-* These reuse %pcrel_lo(label) for their lower half
+* 这些重用 %pcrel_lo(label) 的低半部分
 
 ## 标签
 
@@ -229,7 +229,7 @@ loop:
 
 ## 相对寻址
 
-The following example shows how to load a PC-relative address:
+以下示例显示如何加载相对 PC 的地址：
 
 ```assembly
 1:
@@ -267,7 +267,7 @@ The following example shows how to load a PC-relative address:
 			4: R_RISCV_PCREL_LO12_I	.L1
 ```
 
-## Load Immediate
+## 加载立即数
 
 以下示例显示了用于加载立即值的`li`伪指令：
 
@@ -277,7 +277,7 @@ The following example shows how to load a PC-relative address:
 	li	a0, CONSTANT
 ```
 
-Which, for RV32I, generates the following assembler output, as seen by `objdump`:
+对于 RV32I，生成以下汇编程序输出，如`objdump`所示：
 
 ```assembly
 00000000 <.text>:
@@ -285,7 +285,7 @@ Which, for RV32I, generates the following assembler output, as seen by `objdump`
    4:	eef50513          	addi	a0,a0,-273 # deadbeef <CONSTANT+0x0>
 ```
 
-## Load Upper Immediate's Immediate
+## 加载立即数的上半部分
 
 `lui`的直接参数是区间 [0x0, 0xfffff] 中的整数。它的压缩形式`c.lui`只接受子区间 [0x1, 0x1f] 和 [0xfffe0, 0xfffff] 中的那些。
 
@@ -303,15 +303,15 @@ Which, for RV32I, generates the following assembler output, as seen by `objdump`
 
 `la`伪指令是在汇编中获取变量地址的首选方法，除非需要显式控制 PC 相对或 GOT 间接寻址。
 
-## Load Local Address
+## 加载局部地址
 
-The following example shows the `lla` pseudo instruction which is used to load local symbol addresses:
+以下示例显示了用于加载局部符号地址的`lla`伪指令：
 
 ```assembly
 	lla	a0, msg + 1
 ```
 
-This generates the following instructions and relocations as seen by `objdump`:
+如`objdump`所示，这会生成以下指令和重定位：
 
 ```assembly
 0000000000000000 <.text>:
@@ -329,7 +329,7 @@ This generates the following instructions and relocations as seen by `objdump`:
 	lga	a0, msg + 1
 ```
 
-This generates the following instructions and relocations as seen by `objdump` (for RV64; RV32 will use `lw` instead of `ld`):
+这会生成`objdump`所示的以下指令和重定位（RV32 将使用`lw`而不是`ld` ）：
 
 ```assembly
 0000000000000000 <.text>:
@@ -339,14 +339,14 @@ This generates the following instructions and relocations as seen by `objdump` (
 			4: R_RISCV_PCREL_LO12_I	.L0
 ```
 
-## Load and Store Global
+## 全局加载和存储
 
 以下伪指令可用于从全局对象加载和存储：
 
 - `l{b|h|w|d} <rd>, <symbol>` : 从全局加载字节、半字、字或双字[^1]
 - `s{b|h|w|d} <rd>, <symbol>, <rt>` : 将字节、半字、字或双字存储到全局[^2]
-- `fl{h|w|d|q} <rd>, <symbol>, <rt>`: load half, float, double or quad precision from global[^2]
-- `fs{h|w|d|q} <rd>, <symbol>, <rt>`: store half, float, double or quad precision to global[^2]
+- `fl{h|w|d|q} <rd>, <symbol>, <rt>` : 从全局加载半精度、单精度、双精度或四精度 [^2]
+- `fs{h|w|d|q} <rd>, <symbol>, <rt>` : 将半精度、单精度、双精度或四精度存储到全局[^2]
 
 [^1]：第一个操作数隐式用作暂存寄存器。 [^2]：最后一个操作数指定要使用的暂存寄存器。
 
@@ -359,7 +359,7 @@ This generates the following instructions and relocations as seen by `objdump` (
 	fsd	fa0, var4, t0
 ```
 
-Which generates the following assembler output and relocations as seen by `objdump`:
+如`objdump`所示，它生成以下汇编器输出和重定位：
 
 ```
 0000000000000000 <.text>:
@@ -392,7 +392,7 @@ Which generates the following assembler output and relocations as seen by `objdu
 	addi	a0, a0, %lo(UART_BASE)
 ```
 
-Which generates the following assembler output as seen by `objdump`:
+如`objdump`所示，它生成以下汇编程序输出：
 
 ```assembly
 0000000000000000 <.text>:
@@ -407,7 +407,7 @@ Which generates the following assembler output as seen by `objdump`:
 - `call <symbol>` : 调用子程序[^1]
 - `call <rd>, <symbol>` : 调用子程序[^2]
 - `tail <symbol>` : tail 调用子程序[^3]
-- `jump	<symbol>, <rt>`: jump to away routine[^4]
+- `jump <symbol>, <rt>` : 跳转到远处程序[^4]
 
 [^1]: `ra`隐式用于保存返回地址。 [^2]：类似于`call <symbol>` ，但`<rd>`用于保存返回地址。 [^3]: `t1`隐式用作暂存寄存器。 [^4]：类似于`tail <symbol>` ，但`<rt>`被用作暂存寄存器。
 
@@ -419,7 +419,7 @@ Which generates the following assembler output as seen by `objdump`:
 	jump	func3, t0
 ```
 
-Which generates the following assembler output and relocations as seen by `objdump`:
+如`objdump`所示，它生成以下汇编器输出和重定位：
 
 ```
 0000000000000000 <.text>:
@@ -444,7 +444,7 @@ Which generates the following assembler output and relocations as seen by `objdu
 - `rtz` ：向零舍入
 - `rdn` ：向下舍入
 - `rup` ：四舍五入
-- `rmm`: round to nearest, ties to max magnitude
+- `rmm` ：四舍五入到最近，与最大值相关
 - `dyn` ：动态舍入模式（使用`fcsr`寄存器的`frm`字段中指定的舍入模式）
 
 ## 控制和状态寄存器
@@ -514,7 +514,7 @@ fail_msg:
 
 ## <a name="pseudoinstructions"></a>标准 RISC-V 伪指令列表
 
-伪指令 | 基本指令 | 意义 | Comment
+伪指令 | 基本指令 | 意义 | 注释
 :-- | :-- | :-- | :--
 la rd, symbol | auipc rd, symbol[31:12]; addi rd, rd, symbol[11:0] | Load address | With `.option nopic` (Default)
 la rd, symbol | auipc rd, symbol@GOT[31:12]; l{w|d} rd, symbol@GOT[11:0](rd) | Load address | With `.option pic`
@@ -594,3 +594,5 @@ fsflags rd, rs | csrrw rd, fflags, rs | 交换 FP 异常标志
 fsflags rs | csrrw x0, fflags, rs | 写入 FP 异常标志
 fsflagsi rd, imm | csrrwi rd, fflags, imm | Swap FP exception flags, immediate
 fsflagsi imm | csrrwi x0, fflags, imm | Write FP exception flags, immediate
+
+
