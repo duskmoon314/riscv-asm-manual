@@ -516,54 +516,54 @@ fail_msg:
 
 伪指令 | 基本指令 | 意义 | 注释
 :-- | :-- | :-- | :--
-la rd, symbol | auipc rd, symbol[31:12]; addi rd, rd, symbol[11:0] | Load address | With `.option nopic` (Default)
-la rd, symbol | auipc rd, symbol@GOT[31:12]; l{w | Load address | With `.option pic`
-lla rd, symbol | auipc rd, symbol[31:12]; addi rd, rd, symbol[11:0] | Load local address |
-lga rd, symbol | auipc rd, symbol@GOT[31:12]; l{w|d} rd, symbol@GOT[11:0](rd) | Load global address |
-l{b|h|w|d} rd, symbol | auipc rd, symbol[31:12]; l{b|h|w|d} rd, symbol[11:0](rd) | Load global |
-s{b|h|w|d} rd, symbol, rt | auipc rt, symbol[31:12]; s{b|h|w|d} rd, symbol[11:0](rt) | Store global |
-fl{w|d} rd, symbol, rt | auipc rt, symbol[31:12]; fl{w|d} rd, symbol[11:0](rt) | Floating-point load global |
-fs{w|d} rd, symbol, rt | auipc rt, symbol[31:12]; fs{w|d} rd, symbol[11:0](rt) | Floating-point store global |
-nop | addi x0, x0, 0 | No operation |
-li rd, immediate | *Myriad sequences* | Load immediate |
-mv rd, rs | addi rd, rs, 0 | Copy register |
-not rd, rs | xori rd, rs, -1 | Ones’ complement |
-neg rd, rs | sub rd, x0, rs | Two’s complement |
-negw rd, rs | subw rd, x0, rs | Two’s complement word |
-sext.b rd, rs | slli rd, rs, XLEN - 8; srai rd, rd, XLEN - 8 | Sign extend byte | It will expand to another instruction sequence when B extension is available*[1]
-sext.h rd, rs | slli rd, rs, XLEN - 16; srai rd, rd, XLEN - 16 | Sign extend half word | It will expand to another instruction sequence when B extension is available*[1]
-sext.w rd, rs | addiw rd, rs, 0 | Sign extend word |
-zext.b rd, rs | andi rd, rs, 255 | Zero extend byte |
-zext.h rd, rs | slli rd, rs, XLEN - 16; srli rd, rd, XLEN - 16 | Zero extend half word | It will expand to another instruction sequence when B extension is available*[1]
-zext.w rd, rs | slli rd, rs, XLEN - 32; srli rd, rd, XLEN - 32 | Zero extend word | It will expand to another instruction sequence when B extension is available*[1]
-seqz rd, rs | sltiu rd, rs, 1 | Set if = zero |
-snez rd, rs | sltu rd, x0, rs | Set if != zero |
-sltz rd, rs | slt rd, rs, x0 | Set if &lt; zero |
-sgtz rd, rs | slt rd, x0, rs | Set if &gt; zero |
-fmv.s rd, rs | fsgnj.s rd, rs, rs | Copy single-precision register |
-fabs.s rd, rs | fsgnjx.s rd, rs, rs | Single-precision absolute value |
-fneg.s rd, rs | fsgnjn.s rd, rs, rs | Single-precision negate |
-fmv.d rd, rs | fsgnj.d rd, rs, rs | Copy double-precision register |
-fabs.d rd, rs | fsgnjx.d rd, rs, rs | Double-precision absolute value |
-fneg.d rd, rs | fsgnjn.d rd, rs, rs | Double-precision negate |
-beqz rs, offset | beq rs, x0, offset | Branch if = zero |
-bnez rs, offset | bne rs, x0, offset | Branch if != zero |
-blez rs, offset | bge x0, rs, offset | Branch if ≤ zero |
-bgez rs, offset | bge rs, x0, offset | Branch if ≥ zero |
-bltz rs, offset | blt rs, x0, offset | Branch if &lt; zero |
-bgtz rs, offset | blt x0, rs, offset | Branch if &gt; zero |
-bgt rs, rt, offset | blt rt, rs, offset | Branch if &gt; |
-ble rs, rt, offset | bge rt, rs, offset | Branch if ≤ |
-bgtu rs, rt, offset | bltu rt, rs, offset | Branch if &gt;, unsigned |
-bleu rs, rt, offset | bgeu rt, rs, offset | Branch if ≤, unsigned |
-j offset | jal x0, offset | Jump |
-jal offset | jal x1, offset | Jump and link |
-jr rs | jalr x0, rs, 0 | Jump register |
-jalr rs | jalr x1, rs, 0 | Jump and link register |
-ret | jalr x0, x1, 0 | Return from subroutine |
-call offset | auipc x6, offset[31:12]; jalr x1, x6, offset[11:0] | Call far-away subroutine |
-tail offset | auipc x6, offset[31:12]; jalr x0, x6, offset[11:0] | Tail call far-away subroutine |
-fence | fence iorw, iorw | Fence on all memory and I/O |
+la rd, symbol                | auipc rd, symbol[31:12]; addi rd, rd, symbol[11:0]            | Load address | With `.option nopic` (Default)
+la rd, symbol                | auipc rd, symbol@GOT[31:12]; l{w\|d} rd, symbol@GOT[11:0]\(rd\) | Load address | With `.option pic`
+lla rd, symbol               | auipc rd, symbol[31:12]; addi rd, rd, symbol[11:0]            | Load local address
+lga rd, symbol               | auipc rd, symbol@GOT[31:12]; l{w\|d} rd, symbol@GOT[11:0]\(rd\) | Load global address
+l{b\|h\|w\|d} rd, symbol     | auipc rd, symbol[31:12]; l{b\|h\|w\|d} rd, symbol[11:0]\(rd\) | Load global
+s{b\|h\|w\|d} rd, symbol, rt | auipc rt, symbol[31:12]; s{b\|h\|w\|d} rd, symbol[11:0]\(rt\) | Store global
+fl{w\|d} rd, symbol, rt      | auipc rt, symbol[31:12]; fl{w\|d} rd, symbol[11:0]\(rt\)      | Floating-point load global
+fs{w\|d} rd, symbol, rt      | auipc rt, symbol[31:12]; fs{w\|d} rd, symbol[11:0]\(rt\)      | Floating-point store global
+nop                          | addi x0, x0, 0                                                | No operation
+li rd, immediate             | *Myriad sequences*                                            | Load immediate
+mv rd, rs                    | addi rd, rs, 0                                                | Copy register
+not rd, rs                   | xori rd, rs, -1                                               | Ones’ complement
+neg rd, rs                   | sub rd, x0, rs                                                | Two’s complement
+negw rd, rs                  | subw rd, x0, rs                                               | Two’s complement word
+sext.b rd, rs                | slli rd, rs, XLEN - 8; srai rd, rd, XLEN - 8                  | Sign extend byte | It will expand to another instruction sequence when B extension is available*[1]
+sext.h rd, rs                | slli rd, rs, XLEN - 16; srai rd, rd, XLEN - 16                | Sign extend half word | It will expand to another instruction sequence when B extension is available*[1]
+sext.w rd, rs                | addiw rd, rs, 0                                               | Sign extend word
+zext.b rd, rs                | andi rd, rs, 255                                              | Zero extend byte
+zext.h rd, rs                | slli rd, rs, XLEN - 16; srli rd, rd, XLEN - 16                | Zero extend half word | It will expand to another instruction sequence when B extension is available*[1]
+zext.w rd, rs                | slli rd, rs, XLEN - 32; srli rd, rd, XLEN - 32                | Zero extend word | It will expand to another instruction sequence when B extension is available*[1]
+seqz rd, rs                  | sltiu rd, rs, 1                                               | Set if = zero
+snez rd, rs                  | sltu rd, x0, rs                                               | Set if != zero
+sltz rd, rs                  | slt rd, rs, x0                                                | Set if < zero
+sgtz rd, rs                  | slt rd, x0, rs                                                | Set if > zero
+fmv.s rd, rs                 | fsgnj.s rd, rs, rs                                            | Copy single-precision register
+fabs.s rd, rs                | fsgnjx.s rd, rs, rs                                           | Single-precision absolute value
+fneg.s rd, rs                | fsgnjn.s rd, rs, rs                                           | Single-precision negate
+fmv.d rd, rs                 | fsgnj.d rd, rs, rs                                            | Copy double-precision register
+fabs.d rd, rs                | fsgnjx.d rd, rs, rs                                           | Double-precision absolute value
+fneg.d rd, rs                | fsgnjn.d rd, rs, rs                                           | Double-precision negate
+beqz rs, offset              | beq rs, x0, offset                                            | Branch if = zero
+bnez rs, offset              | bne rs, x0, offset                                            | Branch if != zero
+blez rs, offset              | bge x0, rs, offset                                            | Branch if ≤ zero
+bgez rs, offset              | bge rs, x0, offset                                            | Branch if ≥ zero
+bltz rs, offset              | blt rs, x0, offset                                            | Branch if < zero
+bgtz rs, offset              | blt x0, rs, offset                                            | Branch if > zero
+bgt rs, rt, offset           | blt rt, rs, offset                                            | Branch if >
+ble rs, rt, offset           | bge rt, rs, offset                                            | Branch if ≤
+bgtu rs, rt, offset          | bltu rt, rs, offset                                           | Branch if >, unsigned
+bleu rs, rt, offset          | bgeu rt, rs, offset                                           | Branch if ≤, unsigned
+j offset                     | jal x0, offset                                                | Jump
+jal offset                   | jal x1, offset                                                | Jump and link
+jr rs                        | jalr x0, rs, 0                                                | Jump register
+jalr rs                      | jalr x1, rs, 0                                                | Jump and link register
+ret                          | jalr x0, x1, 0                                                | Return from subroutine
+call offset                  | auipc x6, offset[31:12]; jalr x1, x6, offset[11:0]            | Call far-away subroutine
+tail offset                  | auipc x6, offset[31:12]; jalr x0, x6, offset[11:0]            | Tail call far-away subroutine
+fence                        | fence iorw, iorw                                              | Fence on all memory and I/O
 
 - [1] 当 B 扩展存在时，我们没有指定代码序列，因为 B 扩展仍然没有被批准或冻结。一旦冻结，我们将指定扩展顺序。
 
